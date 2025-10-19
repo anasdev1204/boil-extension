@@ -14,8 +14,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "boil-extension.helloWorld",
-        "title": "Hello World"
+        "command": "boil-extension.openTrackedTerminal",
+        "title": "Open tracked terminal"
+      },
+      {
+        "command": "boil-extension.viewHistory",
+        "title": "View current recorded commands history"
       }
     ]
   },
@@ -35,7 +39,8 @@
     "@vscode/test-cli": "^0.0.11",
     "@vscode/test-electron": "^2.5.2",
     "eslint": "^9.36.0",
-    "tsc": "^2.0.4",
+    "install": "^0.13.0",
+    "tsc-alias": "^1.8.16",
     "typescript": "^5.9.3"
   }
 }

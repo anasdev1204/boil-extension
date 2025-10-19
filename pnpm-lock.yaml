@@ -32,9 +32,9 @@ importers:
       eslint:
         specifier: ^9.36.0
         version: 9.37.0
-      tsc:
-        specifier: ^2.0.4
-        version: 2.0.4
+      install:
+        specifier: ^0.13.0
+        version: 0.13.0
       tsc-alias:
         specifier: ^1.8.16
         version: 1.8.16
@@ -577,6 +577,10 @@ packages:
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
+  install@0.13.0:
+    resolution: {integrity: sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==}
+    engines: {node: '>= 0.10'}
+
   is-binary-path@2.1.0:
     resolution: {integrity: sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==}
     engines: {node: '>=8'}
@@ -947,10 +951,6 @@ packages:
   tsc-alias@1.8.16:
     resolution: {integrity: sha512-QjCyu55NFyRSBAl6+MTFwplpFcnm2Pq01rR/uxfqJoLMm6X3O14KEGtaSDZpJYaE1bJBGDjD0eSuiIWPe2T58g==}
     engines: {node: '>=16.20.2'}
-    hasBin: true
-
-  tsc@2.0.4:
-    resolution: {integrity: sha512-fzoSieZI5KKJVBYGvwbVZs/J5za84f2lSTLPYf6AGiIf43tZ3GNrI1QzTLcjtyDDP4aLxd46RTZq1nQxe7+k5Q==}
     hasBin: true
 
   type-check@0.4.0:
@@ -1608,6 +1608,8 @@ snapshots:
 
   inherits@2.0.4: {}
 
+  install@0.13.0: {}
+
   is-binary-path@2.1.0:
     dependencies:
       binary-extensions: 2.3.0
@@ -1964,8 +1966,6 @@ snapshots:
       mylas: 2.1.13
       normalize-path: 3.0.0
       plimit-lit: 1.6.1
-
-  tsc@2.0.4: {}
 
   type-check@0.4.0:
     dependencies:
