@@ -6,17 +6,31 @@ interface CommandRecord {
     saved: boolean;
 }
 
+type History = {
+    label: string;
+    description: string;
+    detail: string;
+}
+
 /**
  * Keeps track of the commands and keeps a history of them
  */
 export class CommandTracker {
     private commands: CommandRecord[] = [];
+    private saved: { name: string; commands: CommandRecord[] }[] = [];
     private pendingExecutions: Map<
         vscode.TerminalShellExecution,
         string
     > = new Map();
 
-    constructor(private context: vscode.ExtensionContext) {}
+    private _onDidUpdate = new vscode.EventEmitter<void>();
+    public readonly onDidUpdate = this._onDidUpdate.event;
+
+    public onTerminalClose = new vscode.EventEmitter<void>();
+
+    constructor(private context: vscode.ExtensionContext) {
+        this.saved = context.globalState.get('savedRecordings', []);
+    }
 
     registerCommandStart(
         command: string,
@@ -33,6 +47,7 @@ export class CommandTracker {
         };
 
         this.commands.push(record);
+        this._onDidUpdate.fire();
         console.log(`Command ${saved ? 'saved' : 'skipped'}: ${command}`);
     }
 
@@ -44,52 +59,53 @@ export class CommandTracker {
         return [...this.commands];
     }
 
-    printAndClearHistory(): void {
-        const savedCommands = this.getSavedCommands();
-
-        if (savedCommands.length === 0) {
-            console.log('No commands were saved.');
-            vscode.window.showInformationMessage(
-                'Terminal closed. No commands were saved.'
-            );
-            return;
-        }
-
-        console.log('\n========================================');
-        console.log('SAVED COMMAND HISTORY');
-        console.log('========================================');
-        
-        savedCommands.forEach((record, index) => {
-            const timeStr = record.timestamp.toLocaleTimeString();
-            console.log(`${index + 1}. [${timeStr}] ${record.command}`);
-        });
-        
-        console.log('========================================\n');
-
-        vscode.window.showInformationMessage(
-            `Process successful! ${savedCommands.length} command(s) saved.`
-        );
-
-        this.commands = [];
-    }
-
-    showHistory(): void {
+    getHistory(): History[] {
         const savedCommands = this.getSavedCommands();
 
         if (savedCommands.length === 0) {
             vscode.window.showInformationMessage('No commands in history.');
-            return;
+            return [];
         }
 
-        const items = savedCommands.map((record, index) => ({
+        return savedCommands.map((record, index) => ({
             label: record.command,
             description: record.timestamp.toLocaleString(),
             detail: `Command #${index + 1}`
         }));
+    }
 
-        vscode.window.showQuickPick(items, {
+    getSaved() {
+        return this.saved;
+    }
+
+    showHistory(): void {
+        const history = this.getHistory();
+
+        vscode.window.showQuickPick(history, {
             placeHolder: 'Command History',
             title: 'Saved Commands'
         });
+    }
+
+    async saveCurrentRecording() {
+        if (this.commands.length === 0) {
+            vscode.window.showInformationMessage('No commands to save.');
+            return;
+        }
+        const name = await vscode.window.showInputBox({ prompt: 'Enter a name for this recording' });
+        if (!name) {
+            return;
+        };
+
+        this.saved.push({ name, commands: [...this.commands] });
+        this.commands = [];
+        await this.context.globalState.update('savedRecordings', this.saved);
+        vscode.window.showInformationMessage(`Saved "${name}"`);
+    }
+
+    discardCurrentRecording() {
+        this.commands = [];
+        vscode.window.showInformationMessage('Recoreded commands discarded.');
+        this._onDidUpdate.fire();
     }
 }

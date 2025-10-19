@@ -18,10 +18,24 @@
         "title": "Open tracked terminal"
       },
       {
+        "command": "boil-extension.closeTrackedTerminal",
+        "title": "Close tracked terminal"
+      },
+      {
         "command": "boil-extension.viewHistory",
         "title": "View current recorded commands history"
       }
+    ],
+  "viewsContainers": {
+    "activitybar": [
+      { "id": "boilTracker", "title": "Boil", "icon": "media/icon.svg" }
     ]
+  },
+  "views": {
+    "boilTracker": [
+      { "id": "boilView", "name": "Recorder", "icon": "media/icon.svg", "type": "webview" }
+    ]
+  }
   },
   "scripts": {
     "compile": "tsc -p ./ && tsc-alias",

@@ -92,8 +92,8 @@ export class ShellExecutionListener {
         }
     }
 
-    onTerminalClosed(): void {
-        this.commandTracker.printAndClearHistory();
+    async onTerminalClosed(): Promise<void> {
+        await this.commandTracker.saveCurrentRecording();
         this.disposables.forEach(d => d.dispose());
         this.disposables = [];
     }
